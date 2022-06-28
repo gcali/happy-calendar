@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="UTF-8">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+.calendar {
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  max-width: 50em;
+}
+.calendar .month {
+  border: 1px solid black;
+  display: flex;
+  flex-direction: row;
+}
+.calendar .month .title {
+  flex-grow: 1;
+  text-align: center;
+}
+.calendar .month .action {
+  padding: 0 1em;
+  cursor: pointer;
+}
+.calendar .days {
+  border: 1px solid black;
+  border-top: 0px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 1em;
+}
+.calendar .days .day {
+  flex-shrink: 0;
+  width: 8em;
+  height: 4em;
+  border: 1.5px solid grey;
+  padding: 1em 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.calendar .days .day hr {
+  width: 6em;
+}
+.calendar .days .day .day-content {
+  text-align: center;
+}
+</style>
+
+<body>
+    <div class="calendar">
+      <div class="month">
+        <div class="action" id="left"><</div>
+        <div class="title" id="title"></div>
+        <div class="action" id="right">></div>
+      </div>
+      <div class="days" id="days"></div>
+    </div>
+
+    <script>
+const titleElement = document.getElementById("title");
+
+const date = new Date();
+
+const month = [
+   "Gennaio",
+   "Febbraio",
+   "Marzo",
+   "Aprile",
+   "Maggio",
+   "Giugno",
+   "Luglio",
+   "Agosto",
+   "Settembre",
+   "Ottobre",
+   "Novembre",
+   "Dicembre"
+];
+
+const weekday = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
+
+
+
+const current = {
+   year: date.getFullYear(),
+   month: date.getMonth()
+};
+
+const left = document.getElementById("left");
+const right = document.getElementById("right");
+
+left.onclick = () => {
+   current.month--;
+   if (current.month < 0) {
+      current.month += 12;
+      current.year--;
+   }
+   run();
+}
+
+right.onclick = () => {
+   current.month++;
+   if (current.month >= 12) {
+      current.month -= 12;
+      current.year++;
+   }
+   run();
+}
+
+const getDate = () => {
+   return new Date(current.year, current.month);
+}
+
+const getLastDay = () => {
+   const d = new Date(current.year, current.month + 1);
+   d.setDate(d.getDate() - 1);
+   return d;
+}
+
+const run = () => {
+   titleElement.innerHTML = `${month[getLastDay().getMonth()]} ${getLastDay().getFullYear()}`;
+
+   const daysContainer = document.getElementById("days");
+
+   const days = [];
+
+   const sentences = [
+      "Super impegnata",
+      "Occupatissima",
+      "Sfatta",
+      "Stanca",
+      "In vacanza",
+      "Al lavoro",
+      "Non un momento libero",
+      "Senza respiro"
+   ];
+
+   function getRandomInt(min, max) {
+     return min + Math.floor(Math.random() * (max - min));
+   }
+
+   const d = new Date(current.year, current.month);
+   for (let i = 1; i <= getLastDay().getDate(); i++) {
+      d.setDate(i);
+      const day = document.createElement("div");
+      day.classList.add("day");
+      const dayTitle = document.createElement("div");
+      dayTitle.innerHTML = `${i} - ${weekday[d.getDay()]}`;
+      const dayContent = document.createElement("div");
+      dayContent.classList.add("day-content");
+      const sentence = sentences[getRandomInt(1, sentences.length)];
+      dayContent.innerHTML = sentence;
+      day.appendChild(dayTitle);
+      day.appendChild(document.createElement("hr"));
+      day.appendChild(dayContent);
+      days.push(day);
+   }
+
+   daysContainer.innerHTML = "";
+   for (const day of days) {
+      daysContainer.appendChild(day);
+   }
+}
+
+run();
+    </script>
+
+</body>
+
+</html>
+
