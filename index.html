@@ -15,6 +15,7 @@
   border: 1px solid black;
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 .calendar .month .title {
   flex-grow: 1;
@@ -122,7 +123,15 @@ const getLastDay = () => {
 }
 
 const run = () => {
-   titleElement.innerHTML = `${month[getLastDay().getMonth()]} ${getLastDay().getFullYear()}`;
+            const realTitle = document.createElement("div");
+            const dateTitle = document.createElement("div");
+   realTitle.innerHTML = "Calendario di Sara";
+   dateTitle.innerHTML = `${month[getLastDay().getMonth()]} ${getLastDay().getFullYear()}`;
+
+            titleElement.innerHTML = "";
+            titleElement.appendChild(realTitle);
+            titleElement.appendChild(dateTitle);
+
 
    const daysContainer = document.getElementById("days");
 
